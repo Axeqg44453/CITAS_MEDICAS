@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>IESS - Portal de Médicos</title>
+  <!-- Iconos FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Animaciones Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="navbar-iess">
+    <div class="logo-container">
+      <i class="fa-solid fa-user-doctor logo-icon"></i>
+      <div>
+        <span class="logo-text">IESS</span>
+        <span class="sub-logo">Portal del Personal Médico</span>
+      </div>
+    </div>
+    <a href="/auth/logout" class="btn-logout"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</a>
+  </header>
+
+  <div class="dashboard-container animate__animated animate__fadeIn">
+    <!-- Indicadores Visuales para el Médico -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <i class="fa-solid fa-clipboard-user stat-icon"></i>
+        <div class="stat-info">
+          <h4>Atenciones Asignadas</h4>
+          <p><%= citas.length %></p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-hospital-user stat-icon"></i>
+        <div class="stat-info">
+          <h4>Estado del Sistema</h4>
+          <p style="color: #38a169;">En Línea</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-calendar-day stat-icon"></i>
+        <div class="stat-info">
+          <h4>Turnos de Hoy</h4>
+          <p><%= citas.filter(c => c.estado === 'Pendiente').length %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Gestión de Citas -->
+    <div class="section-card">
+      <h3><i class="fa-solid fa-calendar-check"></i> Agenda de Consultas Asignadas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID Cita</th>
+            <th>Paciente / Afiliado</th>
+            <th>Fecha y Hora</th>
+            <th>Estado Actual</th>
+            <th>Gestión de Turno</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% citas.forEach(c => { %>
+            <tr>
+              <td><strong>#<%= c.id %></strong></td>
+              <td><i class="fa-solid fa-user"></i> <%= c.paciente %></td>
+              <td><i class="fa-regular fa-clock"></i> <%= new Date(c.fecha_hora).toLocaleString() %></td>
+              <td>
+                <span class="badge badge-<%= c.estado.toLowerCase() %>">
+                  <%= c.estado %>
+                </span>
+              </td>
+              <td>
+                <form action="/medico/actualizar-cita" method="POST" style="display: flex; gap: 8px; align-items: center;">
+                  <input type="hidden" name="citaId" value="<%= c.id %>">
+                  
+                  <select name="estado" required style="width: auto; padding: 6px;">
+                    <option value="Pendiente" <%= c.estado === 'Pendiente' ? 'selected' : '' %>>Pendiente</option>
+                    <option value="Completada" <%= c.estado === 'Completada' ? 'selected' : '' %>>Completada</option>
+                    <option value="Reagendada" <%= c.estado === 'Reagendada' ? 'selected' : '' %>>Reagendada</option>
+                    <option value="Cancelada" <%= c.estado === 'Cancelada' ? 'selected' : '' %>>Cancelada</option>
+                  </select>
+
+                  <input type="datetime-local" name="nuevaFecha" style="width: auto; padding: 5px;">
+
+                  <button type="submit" class="btn btn-warning" style="width: auto; padding: 6px 12px;">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="footer-iess">
+    &copy; 2026 Instituto Ecuatoriano de Seguridad Social
+  </footer>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Pacientes - IESS</title>
+  <!-- Estilos e Iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    :root {
+      --iess-blue: #003366;
+      --iess-light-blue: #004b93;
+      --iess-yellow: #f2a900;
+      --iess-bg: #eef2f5;
+      --iess-gray: #6f6e6e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--iess-bg);
+      color: #333;
+    }
+
+    /* Header Institucional */
+    header {
+      background-color: var(--iess-blue);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid var(--iess-yellow);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-container i {
+      font-size: 2rem;
+      color: var(--iess-yellow);
+    }
+
+    .logo-container h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn-logout {
+      background-color: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: var(--iess-yellow);
+      color: var(--iess-blue);
+      border-color: var(--iess-yellow);
+    }
+
+    /* Contenido Principal */
+    .container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Tarjetas / Paneles */
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--iess-light-blue);
+    }
+
+    .card h2 {
+      color: var(--iess-blue);
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Formularios */
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--iess-gray);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--iess-light-blue);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background-color: var(--iess-blue);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--iess-light-blue);
+    }
+
+    /* Tabla de Citas */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: var(--iess-blue);
+      font-weight: bold;
+    }
+
+    /* Badges de Estado */
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-pendiente { background-color: #fff3cd; color: #856404; }
+    .badge-completada { background-color: #d4edda; color: #155724; }
+    .badge-reagendada { background-color: #cce5ff; color: #004085; }
+    .badge-cancelada { background-color: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado Institucional -->
+  <header class="animate__animated animate__fadeInDown">
+    <div class="logo-container">
+      <i class="fa-solid fa-hospital-user"></i>
+      <h1>IESS - Agendamiento de Citas</h1>
+    </div>
+    <div class="user-info">
+      <span><i class="fa-solid fa-user-circle"></i> <%= usuario ? usuario.nombre : 'Paciente' %></span>
+      <a href="/auth/logout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <div class="container">
+    
+    <!-- Panel Izquierdo: Agendar Cita con Médicos Reales -->
+    <section class="card animate__animated animate__fadeInLeft">
+      <h2><i class="fa-solid fa-calendar-plus"></i> Solicitar Cita Médica</h2>
+      
+      <form action="/paciente/agendar" method="POST">
+        <div class="form-group">
+          <label for="medicoId">Médico y Especialidad:</label>
+          <select name="medicoId" id="medicoId" class="form-control" required>
+  <option value="" disabled selected>-- Seleccione un especialista --</option>
+  <% if (typeof medicos !== 'undefined' && medicos && medicos.length > 0) { %>
+    <% medicos.forEach(m => { %>
+      <option value="<%= m.medico_id %>">
+        Dr. <%= m.medico_nombre %> (<%= m.especialidad_nombre %>)
+      </option>
+    <% }) %>
+  <% } else { %>
+    <option value="" disabled>No hay médicos disponibles</option>
+  <% } %>
+</select>
+        </div>
+
+        <div class="form-group">
+          <label for="fechaHora">Fecha y Hora:</label>
+          <input type="datetime-local" name="fechaHora" id="fechaHora" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-check-circle"></i> Confirmar Cita
+        </button>
+      </form>
+    </section>
+
+    <!-- Panel Derecho: Historial y Estado de Citas en Vivo -->
+    <section class="card animate__animated animate__fadeInRight">
+      <h2><i class="fa-solid fa-notes-medical"></i> Mis Citas Solicitadas</h2>
+      
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Especialista</th>
+              <th>Especialidad</th>
+              <th>Fecha y Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (citas && citas.length > 0) { %>
+              <% citas.forEach(cita => { %>
+                <tr>
+                  <td>Dr. <%= cita.medico %></td>
+                  <td><%= cita.especialidad %></td>
+                  <td><%= new Date(cita.fecha_hora).toLocaleString('es-EC', { dateStyle: 'medium', timeStyle: 'short' }) %></td>
+                  <td>
+                    <span class="badge badge-<%= cita.estado.toLowerCase() %>">
+                      <%= cita.estado %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--iess-gray);">
+                  No tienes citas agendadas por el momento.
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

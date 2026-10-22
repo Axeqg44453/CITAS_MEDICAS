@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>IESS - Citas Médicas | Iniciar Sesión</title>
+  <!-- Iconos FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Animaciones Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="navbar-iess">
+    <div class="logo-container">
+      <i class="fa-solid fa-hospital-user logo-icon"></i>
+      <div>
+        <span class="logo-text">IESS</span>
+        <span class="sub-logo">Instituto Ecuatoriano de Seguridad Social</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="box animate__animated animate__fadeInDown">
+      <h2><i class="fa-solid fa-user-shield"></i> Portal de Salud IESS</h2>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <p style="color: #e53e3e; text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-circle-exclamation"></i> <%= error %></p>
+      <% } %>
+
+      <form action="/auth/login" method="POST">
+        <div class="form-group">
+          <label>Correo Electrónico / Cédula:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" name="email" value="paciente@test.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" value="123" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-right-to-bracket"></i> Ingresar al Sistema
+        </button>
+      </form>
+
+      <p style="margin-top:20px; text-align:center; font-size:14px;">
+        ¿No posee una cuenta? <a href="/auth/registro" style="color: var(--iess-blue-light); font-weight: bold;">Registrarse aquí</a>
+      </p>
+    </div>
+  </div>
+
+  <footer class="footer-iess">
+    &copy; 2026 Instituto Ecuatoriano de Seguridad Social - Todos los derechos reservados.
+  </footer>
+</body>
+</html>

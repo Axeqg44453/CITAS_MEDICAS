@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>IESS - Registro de Usuario</title>
+  <!-- Iconos FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Animaciones Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="navbar-iess">
+    <div class="logo-container">
+      <i class="fa-solid fa-hospital-user logo-icon"></i>
+      <div>
+        <span class="logo-text">IESS</span>
+        <span class="sub-logo">Instituto Ecuatoriano de Seguridad Social</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="box animate__animated animate__fadeInDown">
+      <h2><i class="fa-solid fa-id-card"></i> Registro de Afiliado / Médico</h2>
+      
+      <form action="/auth/registro" method="POST">
+        <div class="form-group">
+          <label for="nombre">Nombre Completo:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Correo Electrónico:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-key"></i>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rol">Tipo de Usuario:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-users"></i>
+            <select id="rol" name="rol" onchange="toggleEspecialidad()" required>
+              <option value="paciente">Paciente / Afiliado</option>
+              <option value="medico">Médico / Especialista</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campo condicional para médicos -->
+        <div class="form-group" id="especialidad-group" style="display: none;">
+          <label for="especialidadId">Especialidad Médica:</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-stethoscope"></i>
+            <select id="especialidadId" name="especialidadId">
+              <option value="1">Cardiología</option>
+              <option value="2">Pediatría</option>
+              <option value="3">Medicina General</option>
+              <option value="4">Dermatología</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-user-plus"></i> Registrar Cuenta
+        </button>
+      </form>
+
+      <p style="margin-top:20px; text-align:center; font-size:14px;">
+        ¿Ya tiene una cuenta? <a href="/auth/login" style="color: var(--iess-blue-light); font-weight: bold;">Iniciar Sesión aquí</a>
+      </p>
+    </div>
+  </div>
+
+  <footer class="footer-iess">
+    &copy; 2026 Instituto Ecuatoriano de Seguridad Social
+  </footer>
+
+  <script>
+    function toggleEspecialidad() {
+      const rol = document.getElementById('rol').value;
+      const campoEsp = document.getElementById('especialidad-group');
+      if (rol === 'medico') {
+        campoEsp.style.display = 'block';
+      } else {
+        campoEsp.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
